@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Habit Tracker Fly – Construa Hábitos que Voam</title>
+  <meta name="description" content="Bem-vindo ao melhor app de habit tracker. Organize, acompanhe e transforme seus hábitos diários com o Habit Tracker Fly."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0f1e;
+      --surface: #111827;
+      --card: #161d2e;
+      --accent: #4ade80;
+      --accent2: #22d3ee;
+      --accent3: #a78bfa;
+      --text: #f0f4ff;
+      --muted: #8892a4;
+      --border: rgba(255,255,255,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND MESH ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 10%, rgba(74,222,128,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(34,211,238,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 60% 30%, rgba(167,139,250,0.05) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2.5rem;
+      background: rgba(10,15,30,0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.03em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #0a0f1e;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.55rem 1.4rem;
+      border-radius: 99px;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(74,222,128,0.35);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 1.5rem 5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(74,222,128,0.1);
+      border: 1px solid rgba(74,222,128,0.25);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.35rem 1rem;
+      border-radius: 99px;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.6rem, 7vw, 5.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      max-width: 800px;
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      margin-top: 1.5rem;
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.7;
+      font-weight: 300;
+      animation: fadeUp 0.7s ease 0.2s both;
+    }
+
+    .hero-cta {
+      margin-top: 2.5rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.7s ease 0.3s both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent);
+      color: #0a0f1e;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.85rem 2rem;
+      border-radius: 99px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(74,222,128,0.4);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.85rem 2rem;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* ── FLOATING CARDS ── */
+    .floating-ui {
+      position: relative;
+      margin-top: 4rem;
+      width: 100%;
+      max-width: 360px;
+      animation: fadeUp 0.8s ease 0.4s both;
+    }
+
+    .phone-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 1.8rem;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+
+    .phone-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.4rem;
+    }
+
+    .phone-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .streak-badge {
+      background: rgba(74,222,128,0.12);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.7rem;
+      border-radius: 99px;
+      border: 1px solid rgba(74,222,128,0.2);
+    }
+
+    .habit-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .habit-row:last-child { border-bottom: none; }
+
+    .habit-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .habit-info { flex: 1; }
+    .habit-name { font-size: 0.88rem; font-weight: 500; }
+    .habit-sub { font-size: 0.73rem; color: var(--muted); margin-top: 2px; }
+
+    .habit-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+    }
+
+    .habit-check.done {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0a0f1e;
+    }
+
+    .progress-row {
+      margin-top: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0;
+      animation: growBar 1.2s ease 1s forwards;
+    }
+
+    @keyframes growBar { to { width: 72%; } }
+
+    /* floating mini cards */
+    .float-card {
+      position: absolute;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 0.75rem 1rem;
+      font-size: 0.78rem;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+      white-space: nowrap;
+    }
+
+    .float-card.left {
+      left: -90px;
+      top: 60px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .float-card.right {
+      right: -80px;
+      bottom: 80px;
+      animation: float 3s ease-in-out 1.5s infinite;
+    }
+
+    .float-val {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--accent2);
+    }
+
+    .float-label { color: var(--muted); margin-top: 2px; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ── FEATURES ── */
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 6rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      max-width: 520px;
+    }
+
+    .features-grid {
+      margin-top: 3.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.8rem;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(74,222,128,0.2);
+    }
+
+    .feature-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .feature-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 5rem;
+      padding-top: 5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-item { text-align: center; }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label { font-size: 0.82rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* ── CTA BOTTOM ── */
+    .cta-section {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 5rem 1.5rem 7rem;
+    }
+
+    .cta-box {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 3.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%;
+      transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(74,222,128,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-box h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .cta-box p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .play-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 0.85rem 1.8rem;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .play-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+    }
+
+    .play-btn-text { text-align: left; }
+    .play-btn-sub { font-size: 0.65rem; color: #aaa; }
+    .play-btn-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 1.8rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    footer .logo { font-size: 1rem; }
+    footer p { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.2rem; }
+      .float-card { display: none; }
+      .stats-row { grid-template-columns: repeat(3,1fr); gap: 0.6rem; }
+      .stat-num { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">🪰 <span>HabitTracker</span>Fly</div>
+  <a href="https://play.google.com/store/apps/details?id=app.habittrackerfly" target="_blank" class="nav-cta">Baixar Grátis</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">✦ Disponível no Google Play</div>
+
+  <h1>Construa hábitos<br/>que <em>realmente voam</em></h1>
+
+  <p>Bem-vindo ao melhor app de habit tracker. Organize, acompanhe e transforme seus hábitos diários com leveza e consistência.</p>
+
+  <div class="hero-cta">
+    <a href="https://play.google.com/store/apps/details?id=app.habittrackerfly" target="_blank" class="btn-primary">
+      ▶ Baixar no Google Play
+    </a>
+    <a href="#features" class="btn-secondary">Ver funcionalidades</a>
+  </div>
+
+  <!-- MOCK UI -->
+  <div class="floating-ui">
+    <div class="float-card left">
+      <div class="float-val">🔥 21</div>
+      <div class="float-label">dias de streak</div>
+    </div>
+
+    <div class="phone-card">
+      <div class="phone-header">
+        <span class="phone-title">Hoje</span>
+        <span class="streak-badge">🔥 21 dias</span>
+      </div>
+
+      <div class="habit-row">
+        <div class="habit-dot" style="background:rgba(74,222,128,0.12)">🏃</div>
+        <div class="habit-info">
+          <div class="habit-name">Correr 30 min</div>
+          <div class="habit-sub">7:00 AM · Diário</div>
+        </div>
+        <div class="habit-check done">✓</div>
+      </div>
+
+      <div class="habit-row">
+        <div class="habit-dot" style="background:rgba(34,211,238,0.12)">📚</div>
+        <div class="habit-info">
+          <div class="habit-name">Leitura</div>
+          <div class="habit-sub">20 min · Diário</div>
+        </div>
+        <div class="habit-check done">✓</div>
+      </div>
+
+      <div class="habit-row">
+        <div class="habit-dot" style="background:rgba(167,139,250,0.12)">💧</div>
+        <div class="habit-info">
+          <div class="habit-name">Beber 2L de água</div>
+          <div class="habit-sub">ao longo do dia</div>
+        </div>
+        <div class="habit-check"></div>
+      </div>
+
+      <div class="progress-row">
+        <div class="progress-label">
+          <span>Progresso de hoje</span>
+          <span>72%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="float-card right">
+      <div class="float-val">94%</div>
+      <div class="float-label">taxa este mês</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">Funcionalidades</div>
+  <h2 class="section-title">Tudo que você precisa para não desistir</h2>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(74,222,128,0.1)">🎯</div>
+      <h3>Metas diárias</h3>
+      <p>Defina hábitos personalizados e acompanhe seu progresso com clareza, dia após dia.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(34,211,238,0.1)">🔥</div>
+      <h3>Streaks motivadores</h3>
+      <p>Não quebre a corrente. Cada dia completado fortalece seu comprometimento.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(167,139,250,0.1)">📊</div>
+      <h3>Relatórios visuais</h3>
+      <p>Visualize sua evolução com gráficos bonitos e estatísticas semanais e mensais.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(251,191,36,0.1)">🔔</div>
+      <h3>Lembretes inteligentes</h3>
+      <p>Notificações no horário certo para nunca esquecer seus compromissos diários.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(248,113,113,0.1)">🌙</div>
+      <h3>Modo escuro</h3>
+      <p>Interface elegante e confortável para usar a qualquer hora, sem cansar os olhos.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(74,222,128,0.1)">⚡</div>
+      <h3>Rápido e leve</h3>
+      <p>Abre em segundos. Sem anúncios invasivos, sem lentidão, sem distrações.</p>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-num">10K+</div>
+      <div class="stat-label">Downloads</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4.8★</div>
+      <div class="stat-label">Avaliação</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Gratuito</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box">
+    <h2>Comece hoje. Gratuito.</h2>
+    <p>Milhares de pessoas já transformaram sua rotina com o Habit Tracker Fly. Qual será o seu primeiro hábito?</p>
+    <a href="https://play.google.com/store/apps/details?id=app.habittrackerfly" target="_blank" class="play-btn">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5v-17c0-.83 1-.99 1.4-.45l14 8.5c.37.23.37.77 0 1L4.4 20.95C4 21.49 3 21.33 3 20.5z"/></svg>
+      <div class="play-btn-text">
+        <div class="play-btn-sub">Disponível no</div>
+        <div class="play-btn-name">Google Play</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">🪰 <span>HabitTracker</span>Fly</div>
+  <p>© 2026 Habit Tracker Fly · app.habittrackerfly</p>
+  <p style="color:#4ade80;font-size:0.75rem;">theorylobby@gmail.com</p>
+</footer>
+
+</body>
+</html>
